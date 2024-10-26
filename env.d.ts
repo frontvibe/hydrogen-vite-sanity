@@ -19,6 +19,9 @@ declare global {
   const process: {env: {NODE_ENV: 'production' | 'development'}};
 
   interface Env extends HydrogenEnv {
+    PUBLIC_SANITY_PROJECT_ID: string;
+    PUBLIC_SANITY_DATASET: string;
+    SANITY_PREVIEW_TOKEN: string;
     // declare additional Env parameter use in the fetch handler and Remix loader context here
   }
 }
