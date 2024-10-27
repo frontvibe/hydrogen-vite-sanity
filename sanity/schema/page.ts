@@ -7,8 +7,12 @@ export default defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
       type: 'string',
+    }),
+    defineField({
+      name: 'description',
+      type: 'array',
+      of: [{type: 'block'}],
     }),
   ],
 });

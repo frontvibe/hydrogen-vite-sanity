@@ -31,6 +31,7 @@ export function defineSanityConfig(config: SanityConfig) {
     ...config,
     plugins: [
       presentationTool({
+        name: 'preview',
         previewUrl: {
           previewMode: {enable: '/api/preview'},
         },

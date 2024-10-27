@@ -6,7 +6,8 @@
  *
  * NOTE: Sanity CLI will load environment variables
  */
-import {defineSanityConfig} from '~/sanity/config';
+
+import {defineSanityConfig} from '~/config';
 
 export default defineSanityConfig({
   // @ts-expect-error
