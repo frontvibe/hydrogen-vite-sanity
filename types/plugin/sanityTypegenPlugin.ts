@@ -17,7 +17,7 @@ export function sanityTypegen(options: {
 
     handleHotUpdate({file}) {
       if (schemaFilter(file)) {
-        return execPromise('npm run sanity:schema:extract')
+        return execPromise('npm run sanity:extract')
           .then(({stdout, stderr}) => {
             if (stdout) console.log(stdout); // eslint-disable-line no-console
             if (stderr) console.error(stderr);
@@ -28,7 +28,7 @@ export function sanityTypegen(options: {
       }
 
       if (queriesFilter(file)) {
-        return execPromise('npm run sanity:typegen:generate')
+        return execPromise('npm run sanity:generate')
           .then(({stdout, stderr}) => {
             if (stdout) console.log(stdout); // eslint-disable-line no-console
             if (stderr) console.error(stderr);

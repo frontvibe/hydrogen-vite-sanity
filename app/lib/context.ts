@@ -1,7 +1,8 @@
 import {createHydrogenContext, createWithCache} from '@shopify/hydrogen';
 import {AppSession} from '~/lib/session';
-import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
+
 import {createSanityContext} from './sanity.loader';
+import {CART_QUERY_FRAGMENT} from '~/data/shopify/fragments';
 
 /**
  * The context implementation is separate from server.ts
