@@ -131,6 +131,17 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
+export type Sections = Array<
+  {
+    _key: string;
+  } & HeroSection
+>;
+
+export type HeroSection = {
+  _type: 'heroSection';
+  title?: string;
+};
+
 export type Page = {
   _id: string;
   _type: 'page';
@@ -156,6 +167,7 @@ export type Page = {
     _type: 'block';
     _key: string;
   }>;
+  sections?: Sections;
 };
 
 export type AllSanitySchemaTypes =
@@ -170,11 +182,21 @@ export type AllSanitySchemaTypes =
   | Geopoint
   | Slug
   | SanityAssetSourceData
+  | Sections
+  | HeroSection
   | Page;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: app/data/sanity/queries.ts
+// Source: ./app/data/sanity/fragments.ts
+// Variable: SECTION_LIST_FRAGMENT
+// Query: {  _key,  _type,  _type == 'heroSection' => {  title}}
+export type SECTION_LIST_FRAGMENTResult = {
+  _key: never;
+  _type: never;
+};
+
+// Source: ./app/data/sanity/queries.ts
 // Variable: PAGE_QUERY
-// Query: *[_type == "page"][0] {  title,  description}
+// Query: *[_type == "page"][0] {  title,  description,  sections[] {  _key,  _type,  _type == 'heroSection' => {  title}}}
 export type PAGE_QUERYResult = {
   title: string | null;
   description: Array<{
@@ -195,12 +217,26 @@ export type PAGE_QUERYResult = {
     _type: 'block';
     _key: string;
   }> | null;
+  sections: Array<{
+    _key: string;
+    _type: 'heroSection';
+    title: string | null;
+  }> | null;
 } | null;
+
+// Source: ./app/sections/hero/_fragment.ts
+// Variable: HERO_SECTION_FRAGMENT
+// Query: {  title}
+export type HERO_SECTION_FRAGMENTResult = {
+  title: never;
+};
 
 // Query TypeMap
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "page"][0] {\n  title,\n  description\n}': PAGE_QUERYResult;
+    "{\n  _key,\n  _type,\n  _type == 'heroSection' => {\n  title\n}\n}": SECTION_LIST_FRAGMENTResult;
+    '*[_type == "page"][0] {\n  title,\n  description,\n  sections[] {\n  _key,\n  _type,\n  _type == \'heroSection\' => {\n  title\n}\n}\n}': PAGE_QUERYResult;
+    '{\n  title\n}': HERO_SECTION_FRAGMENTResult;
   }
 }

@@ -3,7 +3,7 @@
  * the Studio and its configuration in the client
  */
 import {type StudioProps, type SingleWorkspace, Studio} from 'sanity';
-import {defineSanityConfig} from '~/config';
+import {defineSanityConfig} from '~/sanity/config';
 
 /**
  * Prevent a consumer from importing into a worker/server bundle.
