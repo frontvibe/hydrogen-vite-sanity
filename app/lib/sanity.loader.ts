@@ -149,9 +149,13 @@ export function createSanityContext(
 
       const queryHash = await hashQuery(query, params);
 
-      return await withCache(
-        queryHash,
-        cacheStrategy,
+      return await withCache.run(
+        {
+          cacheKey: queryHash,
+          cacheStrategy,
+          // Cache if there are no data errors or a specific data that make this result not suited for caching
+          shouldCacheResult: (result) => result.data !== null,
+        },
         async ({addDebugData}) => {
           if (process.env.NODE_ENV === 'development') {
             // Name displayed in the subrequest profiler

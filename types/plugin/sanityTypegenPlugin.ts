@@ -17,7 +17,7 @@ export function sanityTypegen(options: {
 
     handleHotUpdate({file}) {
       if (schemaFilter(file)) {
-        return execPromise('npm run sanity:extract')
+        return execPromise('npm run sanity:extract && npm run sanity:generate')
           .then(({stdout, stderr}) => {
             if (stdout) console.log(stdout); // eslint-disable-line no-console
             if (stderr) console.error(stderr);

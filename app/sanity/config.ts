@@ -1,6 +1,7 @@
-import {defineConfig, type SingleWorkspace} from 'sanity';
+import {defineConfig, isDev, type SingleWorkspace} from 'sanity';
 import {structureTool} from 'sanity/structure';
 import {presentationTool} from 'sanity/presentation';
+import {visionTool} from '@sanity/vision';
 import {schema} from './schema';
 
 /**
@@ -21,6 +22,8 @@ if (typeof document === 'undefined') {
   );
 }
 
+const devPlugins = isDev ? [visionTool()] : [];
+
 /**
  * Wrap whatever Sanity Studio configuration your project requires.
  *
@@ -37,6 +40,7 @@ export function defineSanityConfig(config: SanityConfig) {
         },
       }),
       structureTool(),
+      ...devPlugins,
     ],
     schema,
   });

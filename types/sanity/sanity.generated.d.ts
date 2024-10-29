@@ -132,14 +132,40 @@ export type SanityAssetSourceData = {
 };
 
 export type Sections = Array<
-  {
-    _key: string;
-  } & HeroSection
+  | ({
+      _key: string;
+    } & HeroSection)
+  | ({
+      _key: string;
+    } & FaqSection)
 >;
+
+export type FaqSection = {
+  _type: 'faqSection';
+  title?: string;
+};
 
 export type HeroSection = {
   _type: 'heroSection';
   title?: string;
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
 };
 
 export type Page = {
@@ -183,20 +209,13 @@ export type AllSanitySchemaTypes =
   | Slug
   | SanityAssetSourceData
   | Sections
+  | FaqSection
   | HeroSection
   | Page;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./app/data/sanity/fragments.ts
-// Variable: SECTION_LIST_FRAGMENT
-// Query: {  _key,  _type,  _type == 'heroSection' => {  title}}
-export type SECTION_LIST_FRAGMENTResult = {
-  _key: never;
-  _type: never;
-};
-
 // Source: ./app/data/sanity/queries.ts
 // Variable: PAGE_QUERY
-// Query: *[_type == "page"][0] {  title,  description,  sections[] {  _key,  _type,  _type == 'heroSection' => {  title}}}
+// Query: *[_type == "page"][0] {  title,  description,  sections[] {  _key,  _type,  _type == 'heroSection' => {  title,  description},  _type == 'faqSection' => {  title}}}
 export type PAGE_QUERYResult = {
   title: string | null;
   description: Array<{
@@ -217,26 +236,124 @@ export type PAGE_QUERYResult = {
     _type: 'block';
     _key: string;
   }> | null;
-  sections: Array<{
-    _key: string;
-    _type: 'heroSection';
-    title: string | null;
-  }> | null;
+  sections: Array<
+    | {
+        _key: string;
+        _type: 'faqSection';
+        title: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'heroSection';
+        title: string | null;
+        description: Array<{
+          children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+          }>;
+          style?:
+            | 'blockquote'
+            | 'h1'
+            | 'h2'
+            | 'h3'
+            | 'h4'
+            | 'h5'
+            | 'h6'
+            | 'normal';
+          listItem?: 'bullet' | 'number';
+          markDefs?: Array<{
+            href?: string;
+            _type: 'link';
+            _key: string;
+          }>;
+          level?: number;
+          _type: 'block';
+          _key: string;
+        }> | null;
+      }
+  > | null;
 } | null;
+// Variable: SECTIONS_QUERY
+// Query: *[][0] {  sections[] {  _key,  _type,  _type == 'heroSection' => {  title,  description},  _type == 'faqSection' => {  title}}}
+export type SECTIONS_QUERYResult =
+  | {
+      sections: null;
+    }
+  | {
+      sections: Array<
+        | {
+            _key: string;
+            _type: 'faqSection';
+            title: string | null;
+          }
+        | {
+            _key: string;
+            _type: 'heroSection';
+            title: string | null;
+            description: Array<{
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: 'span';
+                _key: string;
+              }>;
+              style?:
+                | 'blockquote'
+                | 'h1'
+                | 'h2'
+                | 'h3'
+                | 'h4'
+                | 'h5'
+                | 'h6'
+                | 'normal';
+              listItem?: 'bullet' | 'number';
+              markDefs?: Array<{
+                href?: string;
+                _type: 'link';
+                _key: string;
+              }>;
+              level?: number;
+              _type: 'block';
+              _key: string;
+            }> | null;
+          }
+      > | null;
+    }
+  | null;
 
-// Source: ./app/sections/hero/_fragment.ts
-// Variable: HERO_SECTION_FRAGMENT
+// Source: ./app/sections/index.ts
+// Variable: SECTION_LIST_FRAGMENT
+// Query: {  _key,  _type,  _type == 'heroSection' => {  title,  description},  _type == 'faqSection' => {  title}}
+export type SECTION_LIST_FRAGMENTResult = {
+  _key: never;
+  _type: never;
+};
+
+// Source: ./app/sections/faq-section/groq.ts
+// Variable: FAQ_SECTION_FRAGMENT
 // Query: {  title}
+export type FAQ_SECTION_FRAGMENTResult = {
+  title: never;
+};
+
+// Source: ./app/sections/hero-section/groq.ts
+// Variable: HERO_SECTION_FRAGMENT
+// Query: {  title,  description}
 export type HERO_SECTION_FRAGMENTResult = {
   title: never;
+  description: never;
 };
 
 // Query TypeMap
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
-    "{\n  _key,\n  _type,\n  _type == 'heroSection' => {\n  title\n}\n}": SECTION_LIST_FRAGMENTResult;
-    '*[_type == "page"][0] {\n  title,\n  description,\n  sections[] {\n  _key,\n  _type,\n  _type == \'heroSection\' => {\n  title\n}\n}\n}': PAGE_QUERYResult;
-    '{\n  title\n}': HERO_SECTION_FRAGMENTResult;
+    "*[_type == \"page\"][0] {\n  title,\n  description,\n  sections[] {\n  _key,\n  _type,\n  _type == 'heroSection' => {\n  title,\n  description\n},\n  _type == 'faqSection' => {\n  title\n}\n}\n}": PAGE_QUERYResult;
+    "*[][0] {\n  sections[] {\n  _key,\n  _type,\n  _type == 'heroSection' => {\n  title,\n  description\n},\n  _type == 'faqSection' => {\n  title\n}\n}\n}": SECTIONS_QUERYResult;
+    "{\n  _key,\n  _type,\n  _type == 'heroSection' => {\n  title,\n  description\n},\n  _type == 'faqSection' => {\n  title\n}\n}": SECTION_LIST_FRAGMENTResult;
+    '{\n  title\n}': FAQ_SECTION_FRAGMENTResult;
+    '{\n  title,\n  description\n}': HERO_SECTION_FRAGMENTResult;
   }
 }

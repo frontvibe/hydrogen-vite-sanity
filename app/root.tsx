@@ -11,11 +11,12 @@ import {
   isRouteErrorResponse,
   type ShouldRevalidateFunction,
   useMatches,
+  useLoaderData,
 } from '@remix-run/react';
 import favicon from '~/assets/favicon.svg';
-import resetStyles from '~/styles/reset.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
-import appStyles from '~/styles/app.css?url';
+import {VisualEditing} from '@sanity/visual-editing/remix';
+import {useMemo} from 'react';
 
 export type RootLoader = typeof loader;
 
@@ -40,8 +41,6 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 export function links() {
   return [
     {rel: 'stylesheet', href: tailwindCss},
-    {rel: 'stylesheet', href: resetStyles},
-    {rel: 'stylesheet', href: appStyles},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -55,9 +54,14 @@ export function links() {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
+  const {request} = args;
   const {storefront, env, sanity} = args.context;
+  const pathname = new URL(request.url).pathname;
+
+  const isStudioRoute = pathname.startsWith('/studio');
 
   return defer({
+    isStudioRoute,
     isPreviewMode: sanity.preview?.enabled,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
@@ -77,6 +81,17 @@ export async function loader(args: LoaderFunctionArgs) {
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const {isPreviewMode, isStudioRoute} = useLoaderData<typeof loader>();
+
+  const AppLayout = useMemo(
+    () => (
+      <>
+        {children}
+        {isPreviewMode ? <VisualEditing /> : null}
+      </>
+    ),
+    [isPreviewMode, children],
+  );
 
   return (
     <html lang="en">
@@ -87,7 +102,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
       </head>
       <body>
-        {children}
+        {isStudioRoute ? children : AppLayout}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

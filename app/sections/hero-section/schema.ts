@@ -9,5 +9,10 @@ export const heroSectionSchema = defineField({
       name: 'title',
       type: 'string',
     }),
+    defineField({
+      name: 'description',
+      type: 'array',
+      of: [{type: 'block'}],
+    }),
   ],
 });

@@ -21,13 +21,10 @@ export default defineConfig({
     }),
     tsconfigPaths(),
     sanityTypegen({
-      schemaPath: [
-        './app/sanity/**/*.{ts,tsx}',
-        './app/sections/**/_schema.ts',
-      ],
+      schemaPath: ['./app/sanity/**/*.{ts,tsx}', './app/sections/**/schema.ts'],
       queriesPath: [
         './app/data/sanity/**/*.{ts,tsx}',
-        './app/sections/**/_fragment.ts',
+        './app/sections/**/groq.ts',
       ],
     }),
   ],
