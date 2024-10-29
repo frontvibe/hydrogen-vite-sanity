@@ -58,7 +58,7 @@ export async function loader(args: LoaderFunctionArgs) {
   const {storefront, env, sanity} = args.context;
   const pathname = new URL(request.url).pathname;
 
-  const isStudioRoute = pathname.startsWith('/studio');
+  const isStudioRoute = pathname.startsWith('/cms');
 
   return defer({
     isStudioRoute,

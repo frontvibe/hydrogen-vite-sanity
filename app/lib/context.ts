@@ -51,7 +51,7 @@ export async function createAppLoadContext(
       ? {
           enabled: session.get('projectId') === env.PUBLIC_SANITY_PROJECT_ID,
           token: env.SANITY_PREVIEW_TOKEN,
-          studioUrl: '/studio',
+          studioUrl: '/cms',
         }
       : undefined,
   });
