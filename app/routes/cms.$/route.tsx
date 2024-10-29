@@ -76,7 +76,7 @@ export const loader: LoaderFunction = ({context}) => {
   return json({
     projectId,
     dataset,
-    basePath: '/studio',
+    basePath: '/cms',
   });
 };
 
